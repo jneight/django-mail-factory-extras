@@ -13,7 +13,7 @@ class CeleryMail(BaseMail):
             :param async: True to send using task
 
         """
-        self.async = kwargs.pop('async', False)
+        self.async = kwargs.pop('async', True)
         super(CeleryMail, self).__init__(*args, **kwargs)
 
     def create_email_msg(
@@ -25,8 +25,7 @@ class CeleryMail(BaseMail):
 
     def send(self, emails, attachments=None, from_email=None):
         message = self.create_email_msg(
-            emails, attachments=attachments, from_email=from_email,
-            message_class=message_class)
+            emails, attachments=attachments, from_email=from_email)
         message.send(fail_silently=False, async=self.async)
 
 
