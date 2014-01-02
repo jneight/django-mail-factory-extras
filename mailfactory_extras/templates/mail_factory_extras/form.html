@@ -1,0 +1,113 @@
+{% extends "xadmin/views/model_form.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block extrastyle %}
+<link href="{% static 'xadmin/vendor/select2/select2.css' %}" type="text/css" media="screen" rel="stylesheet" />
+<link href="{% static 'xadmin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css' %}" type="text/css" media="screen" rel="stylesheet" />
+<link href="{% static 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css' %}" type="text/css" media="screen" rel="stylesheet" />
+<link href="{% static 'xadmin/css/xadmin.form.css' %}" type="text/css" media="screen" rel="stylesheet" />
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style type="text/css">
+        .choices {
+            margin-left: 0;
+            padding-left: 0;
+            display: block; 
+        }
+
+        .choices li {
+            list-style-type: none;
+            margin-right: 10px;
+        }
+
+
+        .clear {
+            clear: both;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+        <div class="content">
+            {% if preview_messages|length > 1 %}
+            <h2>{% trans "View mail" %}</h2>
+            <div class="language-choices">
+                <ul class="choices">
+                {% for lang_code, message in preview_messages.items %}
+                    <li>
+                        <a href="#" data-lang="{{ lang_code }}" class="content-switcher{% if LANGUAGE_CODE == lang_code %} focus{% endif %}" data-target="#email-{{ lang_code }}">{{ lang_code }}</a>
+                    </li>
+                {% endfor %}
+                </ul>
+                <div class="clear"></div>
+            </div>
+            {% endif %}
+
+            <div class="content-choices">
+                <ul class="choices">
+                    {% for lang_code, message in preview_messages.items %}
+                        <li{% if LANGUAGE_CODE != lang_code %} style="display: none;"{% endif %} id="email-{{ lang_code }}">
+                            <div class="email-message">
+                                {% if message.html %}
+                                    <a href="{% url "admin:mail_factory_preview_message" mail_name=mail_name lang=lang_code %}">{% trans "View html alternative" %}</a>
+                                {% endif %}
+                                <h3>
+                                    {{ message.subject }}
+                                </h3>
+
+                                <div id="body-text-{{ lang_code }}">
+                                    {{ message.body|linebreaks }}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <hr />
+        <div class="content">
+            <h2>Send mail</h2>
+            <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+                <form method="post">{% csrf_token %}
+                    {% crispy form %}
+                    {% block submit_buttons_bottom %}
+                    
+                    <div class="form-actions well well-sm clearfix">
+                        <div class="nav-collapse more-btns collapse">
+<button class="default btn btn-primary hide-xs" type="submit">Get HTML mail content</button>
+
+                        <button class="more btn btn-info hide-xs" type="submit" name="raw">Get raw mail</button>
+                        <button class="more btn btn-info hide-xs" type="submit" name="send">Send to mail</button>
+                        <input class="hide-xs more admintextinputwidget form-control text-field" type="text" name="email" value="" placeholder="{% trans "Email to send to" %}" />
+                    </div>
+                    </div>
+                    {% endblock %}
+                </form>
+            </div>
+        </div>
+  </div>
+{% endblock %}
+
+{% block extrabody %}
+<script type="text/javascript" src="{% static 'xadmin/vendor/jquery-ui/jquery.ui.core.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/jquery-ui/jquery.ui.widget.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/jquery-ui/jquery.ui.mouse.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/jquery-ui/jquery.ui.sortable.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/bootstrap/js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.main.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.responsive.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/load-image/load-image.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/bootstrap-image-gallery/js/bootstrap-image-gallery.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.plugin.portal.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/select2/select2.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.widget.select.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.plugin.quick-form.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.widget.datetime.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'xadmin/js/xadmin.page.form.js' %}"></script>
+{% endblock %}
