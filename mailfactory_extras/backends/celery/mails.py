@@ -3,7 +3,7 @@
 from mail_factory import factory
 from mail_factory.mails import BaseMail
 
-from .messages import AsyncEmailMultiRelated
+from .messages import AsyncEmailMultiRelated, AsyncEmailMultiRelatedMetric
 
 
 class CeleryMail(BaseMail):
@@ -29,4 +29,11 @@ class CeleryMail(BaseMail):
         message.send(fail_silently=False, async=self.async)
 
 
+class CeleryMailMetric(CeleryMail):
+    def create_email_msg(
+            self, emails, attachments=None, from_email=None, lang=None,
+            message_class=AsyncEmailMultiRelatedMetric):
+        return super(CeleryMailMetric, self).create_email_msg(
+            emails, attachments=attachments, from_email=from_email,
+            lang=lang, message_class=message_class)
 
