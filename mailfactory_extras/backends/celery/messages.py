@@ -2,15 +2,8 @@
 
 from celery import shared_task, current_app
 from celery.contrib.methods import task_method
-from celery.utils.log import get_task_logger
-logger_celery = get_task_logger(__name__)
 
 from mail_factory.messages import EmailMultiRelated
-
-try:
-    from app_metrics.utils import metric
-except ImportError:
-    pass
 
 
 class AsyncEmailMultiRelated(EmailMultiRelated):
@@ -27,7 +20,6 @@ class AsyncEmailMultiRelated(EmailMultiRelated):
         """Check if mail will be sent using async task or not
 
         """
-        logger.celery.info('[TASK] [EMAIL] email waiting')
         if async:
             return self._send.delay(fail_silently=fail_silently)
         return self._send(fail_silently=fail_silently)
@@ -47,11 +39,13 @@ class AsyncEmailMultiRelatedMetric(AsyncEmailMultiRelated):
         methods as tasks
 
         """
+        from app_metrics.utils import metric
         result = super(EmailMultiRelated, self).send()
         metric(self.sended_metric)
         return result
 
     def send(self, fail_silently=False, async=False):
+        from app_metrics.utils import metric
         metric(self.waiting_metric)
         return super(AsyncEmailMultiRelatedMetric, self).send(
             fail_silently=fail_silently, async=async)

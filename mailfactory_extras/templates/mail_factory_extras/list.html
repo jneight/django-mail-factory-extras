@@ -1,41 +1,39 @@
 {% extends "xadmin/views/model_list.html" %}
 {% load staticfiles %}
-{% block extrastyle %}
-<link href="{% static 'xadmin/vendor/select2/select2.css' %}" type="text/css" media="screen" rel="stylesheet" />
-<link href="{% static 'xadmin/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css' %}" type="text/css" media="screen" rel="stylesheet" />
-<link href="{% static 'xadmin/vendor/bootstrap-datepicker/css/datepicker.css' %}" type="text/css" media="screen" rel="stylesheet" />
-<link href="{% static 'xadmin/css/xadmin.form.css' %}" type="text/css" media="screen" rel="stylesheet" />
-{% endblock %}
-
+{% load xadmin_tags %}
 {% block content %}
-    <div id="content-main">
-        <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
-            {% block result_list %}
-                <div class="results">
-                    <table id="result_list">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div class="text">Email</div>
-                                    <div class="clear"></div>
-                                </th>
-                                <th scope="col">
-                                    <div class="text">Template</div>
-                                    <div class="clear"></div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for template_name, mail_name in mail_map %}
-                                <tr class="{% cycle 'row1' 'row2' %}">
-                                    <th class="nowrap"><a href="{% url "admin:mail_factory_form" template_name %}">{{ mail_name }}</a></th>
-                                    <td>{{ template_name }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+    <div class="content-toolbar btn-toolbar pull-right clearfix">
+    {% view_block 'top_toolbar' %}
+    <ul class="pagination pagination-sm pagination-left pagination-inline">
+        {% view_block 'pagination' 'small' %}
+    </ul>
+    </div>
+    <div class="results table-responsive">
+        {% if mail_map %}
+            {% block result_grid %}
+            <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="dropdown pull-left">Email name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="dropdown pull-left">Template name</div>
+                    </th>
+                </tr>
+             </thead>
+             <tbody>
+                {% for template_name, mail_name in mail_map %}
+                    <tr class="grid-item {% if row.css_class %} {{ row.css_class}}{%endif%}">
+                        <td {{o.tagattrs}}>
+                            <a href="{% url "admin:mail_factory_form" template_name %}">{{ mail_name }}</a></td>
+                        <td>{{ template_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
             {% endblock %}
-        </div>
+        {% endif %}
+    </div>
     </div>
 {% endblock %}
