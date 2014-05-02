@@ -26,7 +26,7 @@
                 {% for template_name, mail_name in mail_map %}
                     <tr class="grid-item {% if row.css_class %} {{ row.css_class}}{%endif%}">
                         <td {{o.tagattrs}}>
-                            <a href="{% url "admin:mail_factory_form" template_name %}">{{ mail_name }}</a></td>
+                            <a href="{% url "xadmin:mail_factory_form" template_name %}">{{ mail_name }}</a></td>
                         <td>{{ template_name }}</td>
                     </tr>
                 {% endfor %}

@@ -3,7 +3,7 @@
 from mail_factory import factory
 from mail_factory.mails import BaseMail
 
-from .messages import AsyncEmailMultiRelated, AsyncEmailMultiRelatedMetric
+from .messages import CeleryEmailMultiRelated, CeleryEmailMultiRelatedMetric
 
 
 class CeleryMail(BaseMail):
@@ -18,7 +18,7 @@ class CeleryMail(BaseMail):
 
     def create_email_msg(
             self, emails, attachments=None, from_email=None, lang=None,
-            message_class=AsyncEmailMultiRelated):
+            message_class=CeleryEmailMultiRelated):
         return super(CeleryMail, self).create_email_msg(
             emails, attachments=attachments, from_email=from_email,
             lang=lang, message_class=message_class)
@@ -26,13 +26,13 @@ class CeleryMail(BaseMail):
     def send(self, emails, attachments=None, from_email=None):
         message = self.create_email_msg(
             emails, attachments=attachments, from_email=from_email)
-        message.send(fail_silently=False, async=self.async)
+        return message.send(fail_silently=False, async=self.async)
 
 
 class CeleryMailMetric(CeleryMail):
     def create_email_msg(
             self, emails, attachments=None, from_email=None, lang=None,
-            message_class=AsyncEmailMultiRelatedMetric):
+            message_class=CeleryEmailMultiRelatedMetric):
         return super(CeleryMailMetric, self).create_email_msg(
             emails, attachments=attachments, from_email=from_email,
             lang=lang, message_class=message_class)

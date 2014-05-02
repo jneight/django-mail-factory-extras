@@ -1,2 +1,4 @@
-from .mails import CeleryMail
-from .messages import AsyncEmailMultiRelated
+# coding=utf-8
+
+from .mails import CeleryMail, CeleryMailMetric
+from .messages import CeleryEmailMultiRelated, CeleryEmailMultiRelatedMetric

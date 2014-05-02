@@ -5,8 +5,13 @@ from celery.contrib.methods import task_method
 
 from mail_factory.messages import EmailMultiRelated
 
+try:
+    from app_metrics.utils import metric
+except ImportError:
+    metric = None
 
-class AsyncEmailMultiRelated(EmailMultiRelated):
+
+class CeleryEmailMultiRelated(EmailMultiRelated):
     @current_app.task(
         name='AsyncEmailMultiRelated._send_async', filter=task_method)
     def _send(self, fail_silently=False):
@@ -25,7 +30,7 @@ class AsyncEmailMultiRelated(EmailMultiRelated):
         return self._send(fail_silently=fail_silently)
 
 
-class AsyncEmailMultiRelatedMetric(AsyncEmailMultiRelated):
+class CeleryEmailMultiRelatedMetric(CeleryEmailMultiRelated):
     """Metric are handled via django-app-metrics
 
     """
@@ -33,20 +38,21 @@ class AsyncEmailMultiRelatedMetric(AsyncEmailMultiRelated):
     sended_metric = 'mails_sended'
 
     @current_app.task(
-        name='AsyncEmailMultiRelated._send_async', filter=task_method)
+        name='AsyncEmailMultiRelatedMetric._send_async', filter=task_method)
     def _send(self, fail_silently=False):
         """With this decorator, celery will support calling class
         methods as tasks
 
         """
-        from app_metrics.utils import metric
         result = super(EmailMultiRelated, self).send()
-        metric(self.sended_metric)
+        if metric is not None:
+            metric(self.sended_metric)
+            metric(self.waiting_metric, -1)
         return result
 
     def send(self, fail_silently=False, async=False):
-        from app_metrics.utils import metric
-        metric(self.waiting_metric)
+        if metric is not None:
+            metric(self.waiting_metric)
         return super(AsyncEmailMultiRelatedMetric, self).send(
             fail_silently=fail_silently, async=async)
 
