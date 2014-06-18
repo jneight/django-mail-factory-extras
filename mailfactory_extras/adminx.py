@@ -11,22 +11,23 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.template.base import TemplateDoesNotExist
 from django.template.response import TemplateResponse
+from django.core.exceptions import PermissionDenied
 
 import xadmin
-from xadmin.views import CommAdminView
-from xadmin.views.base import filter_hook
-from crispy_forms.layout import Submit, Field
+from xadmin.views import CommAdminView, filter_hook, FormAdminView
 
 import mail_factory.exceptions as mail_exceptions
-
 from mail_factory import factory
 from mail_factory.views import MailPreviewMixin
-
-from adminx_base import FormAdminView
 
 
 class MailListView(CommAdminView):
     template_name = 'mail_factory_extras/list.html'
+
+    def init_request(self, *args, **kwargs):
+        if not self.has_view_permission():
+            raise PermissionDenied
+        return super(MailListView, self).init_request(*args, **kwargs)
 
     def get_context(self):
         """Add mails to the context
@@ -52,6 +53,8 @@ class MailFormView(MailPreviewMixin, FormAdminView):
     form_template = 'mail_factory_extras/form.html'
 
     def init_request(self, *args, **kwargs):
+        if not self.has_view_permission():
+            raise PermissionDenied
 
         self.mail_name = kwargs['mail_name']
         self.prepare_form()
@@ -123,12 +126,26 @@ class MailFormView(MailPreviewMixin, FormAdminView):
         context['preview_messages'] = preview_messages
 
         return context
+    def has_view_permission(self, obj=None):
+        return self.user.is_superuser
+
+    def has_add_permission(self, obj=None):
+        return self.user.is_superuser
+
+    def has_change_permission(self, obj=None):
+        return self.user.is_superuser
+
+    def has_delete_permission(self, obj=None):
+        return self.user.is_superuser
 
 
 class MailPreviewMessageView(MailPreviewMixin, MailListView):
     template_name = 'mail_factory_extras/preview_message.html'
 
     def init_request(self, *args, **kwargs):
+        if not self.has_view_permission():
+            raise PermissionDenied
+
         self.mail_name = kwargs['mail_name']
         self.lang = kwargs['lang']
         try:
@@ -150,7 +167,7 @@ xadmin.site.register_view(
 xadmin.site.register_view(
     r'^mails/(?P<mail_name>\w+)/preview/(?P<lang>\w+)/$',
     MailPreviewMessageView, name='mail_factory_preview_message')
-#site.register_view(
+#xadmin.site.register_view(
     #r'^mails/(?P<mail_name>.*)/html_not_found/$',
     #MailHtmlNotFoundView, name='mail_factory_html_not_found')
 
