@@ -6,15 +6,15 @@
 
 from operator import itemgetter
 
+import xadmin
+from xadmin.views import CommAdminView, filter_hook, FormAdminView
+
 from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.shortcuts import redirect
 from django.template.base import TemplateDoesNotExist
 from django.template.response import TemplateResponse
 from django.core.exceptions import PermissionDenied
-
-import xadmin
-from xadmin.views import CommAdminView, filter_hook, FormAdminView
 
 import mail_factory.exceptions as mail_exceptions
 from mail_factory import factory

@@ -2,14 +2,15 @@
 
 import os
 
-from django.conf import settings
+from abc import ABCMeta, abstractmethod
+
+from django.utils import six
 from django.template import TemplateDoesNotExist
 
 from mail_factory.mails import BaseMail
-from twilio.rest import TwilioRestClient
 
 
-class BaseSMS(BaseMail):
+class BaseSMS(BaseMail, six.with_metaclass(ABCMeta)):
     def get_template_part(self, part, lang=None):
 
         templates = []
@@ -35,11 +36,6 @@ class BaseSMS(BaseMail):
                 'Txt template have not been found')
         return body
 
+    @abstractmethod
     def send(self, to_phone, from_phone=None):
-        from_phone = from_phone or settings.TWILIO_PHONE_SERVER
-        message = self.create_sms_msg()
-        client = TwilioRestClient(
-            settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        response = client.messages.create(
-            to=to_phone, from_=from_phone, body=message)
-        print response.__dict__
+        return
