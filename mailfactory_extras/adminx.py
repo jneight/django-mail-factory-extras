@@ -22,7 +22,7 @@ from mail_factory.views import MailPreviewMixin
 
 
 class MailListView(CommAdminView):
-    template_name = 'mail_factory_extras/list.html'
+    template_name = 'mailfactory_extras/list.html'
 
     def init_request(self, *args, **kwargs):
         if not self.has_view_permission():
@@ -53,7 +53,7 @@ class MailListView(CommAdminView):
 
 
 class MailFormView(MailPreviewMixin, FormAdminView):
-    form_template = 'mail_factory_extras/form.html'
+    form_template = 'mailfactory_extras/form.html'
 
     def init_request(self, *args, **kwargs):
         if not self.has_view_permission():
@@ -143,7 +143,7 @@ class MailFormView(MailPreviewMixin, FormAdminView):
 
 
 class MailPreviewMessageView(MailPreviewMixin, MailListView):
-    template_name = 'mail_factory_extras/preview_message.html'
+    template_name = 'mailfactory_extras/preview_message.html'
 
     def init_request(self, *args, **kwargs):
         if not self.has_view_permission():

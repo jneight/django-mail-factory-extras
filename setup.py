@@ -1,7 +1,8 @@
 # coding=utf-8
 
-
+import os
 from setuptools import setup, find_packages
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 import mailfactory_extras as me
 
@@ -13,8 +14,8 @@ setup(
     description="Extensions for django-mail-factory, like django-xadmin integration or asynchronous message sending",
     author=me.__author__,
     author_email=me.__email__,
+    packages=find_packages(exclude=['tests', 'tests.*',]),
     include_package_data=True,
-    packages=find_packages(),
     license=me.__license__,
     test_suite="tests",
 )
