@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from celery import shared_task, current_app
+from celery import shared_task
 from celery.contrib.methods import task_method
 
 from mail_factory.messages import EmailMultiRelated
@@ -12,7 +12,7 @@ except ImportError:
 
 
 class CeleryEmailMultiRelated(EmailMultiRelated):
-    @current_app.task(
+    @shared_task(
         name='AsyncEmailMultiRelated._send_async', filter=task_method)
     def _send(self, fail_silently=False):
         """With this decorator, celery will support calling class
@@ -37,7 +37,7 @@ class CeleryEmailMultiRelatedMetric(CeleryEmailMultiRelated):
     waiting_metric = 'mails_waiting'
     sended_metric = 'mails_sended'
 
-    @current_app.task(
+    @shared_task(
         name='AsyncEmailMultiRelatedMetric._send_async', filter=task_method)
     def _send(self, fail_silently=False):
         """With this decorator, celery will support calling class
@@ -53,6 +53,6 @@ class CeleryEmailMultiRelatedMetric(CeleryEmailMultiRelated):
     def send(self, fail_silently=False, async=False):
         if metric is not None:
             metric(self.waiting_metric)
-        return super(AsyncEmailMultiRelatedMetric, self).send(
+        return super(CeleryEmailMultiRelatedMetric, self).send(
             fail_silently=fail_silently, async=async)
 

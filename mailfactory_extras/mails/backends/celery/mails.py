@@ -1,6 +1,5 @@
 # coding=utf-8
 
-from mail_factory import factory
 from mail_factory.mails import BaseMail
 
 from .messages import CeleryEmailMultiRelated, CeleryEmailMultiRelatedMetric
