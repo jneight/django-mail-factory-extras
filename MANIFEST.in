@@ -5,4 +5,4 @@ graft mailfactory_extras
 global-exclude *.orig *.pyc *.log *.swp
 prune mailfactory_extras/tests/coverage
 prune mailfactory_extras/.ropeproject
-recursive-include mailfactory_extras/templates *
+recursive-include mailfactory_extras *

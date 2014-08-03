@@ -18,4 +18,5 @@ setup(
     include_package_data=True,
     license=me.__license__,
     test_suite="tests",
+    zip_safe=False,
 )

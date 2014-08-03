@@ -4,8 +4,6 @@
 
 """
 
-from operator import itemgetter
-
 import xadmin
 from xadmin.views import CommAdminView, filter_hook, FormAdminView
 
@@ -19,6 +17,7 @@ from django.core.exceptions import PermissionDenied
 import mail_factory.exceptions as mail_exceptions
 from mail_factory import factory
 from mail_factory.views import MailPreviewMixin
+from .utils import registered_mails_names
 
 
 class MailListView(CommAdminView):
@@ -34,8 +33,7 @@ class MailListView(CommAdminView):
 
         """
         context = super(MailListView, self).get_context()
-        mail_list = [(mail_name, mail_class.__name__) for mail_name, mail_class in
-            sorted(factory.mail_map.items(), key=itemgetter(0))]
+        mail_list = registered_mails_names()
 
         context['mail_map'] = mail_list
         return context
