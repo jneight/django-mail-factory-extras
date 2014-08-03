@@ -48,6 +48,9 @@ class MailListView(CommAdminView):
         return TemplateResponse(self.request, self.template_name,
             context, current_app=self.admin_site.name)
 
+    def has_view_permission(self, obj=None):
+        return self.user.is_superuser
+
 
 class MailFormView(MailPreviewMixin, FormAdminView):
     form_template = 'mail_factory_extras/form.html'
