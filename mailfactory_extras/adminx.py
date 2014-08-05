@@ -164,9 +164,9 @@ class MailPreviewMessageView(MailPreviewMixin, MailListView):
 xadmin.site.register_view(
     r'^mails/$', MailListView, name='mail_factory_list')
 xadmin.site.register_view(
-    r'^mails/(?P<mail_name>\w+)/$',MailFormView, name='mail_factory_form')
+    r'^mails/(?P<mail_name>.*)/$',MailFormView, name='mail_factory_form')
 xadmin.site.register_view(
-    r'^mails/(?P<mail_name>\w+)/preview/(?P<lang>\w+)/$',
+    r'^mails/(?P<mail_name>.*)/preview/(?P<lang>\w+)/$',
     MailPreviewMessageView, name='mail_factory_preview_message')
 #xadmin.site.register_view(
     #r'^mails/(?P<mail_name>.*)/html_not_found/$',
