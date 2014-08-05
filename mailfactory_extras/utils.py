@@ -4,7 +4,7 @@
 
 
 from mail_factory import factory
-import six
+from django.utils import six
 
 def registered_mails_names():
     if hasattr(factory, '_registry'):
