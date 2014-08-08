@@ -7,19 +7,10 @@ Extra features for `django-mail-factory <https://github.com/novapost/django-mail
 New features:
 -------------
 
-  * `django-xadmin <https://github.com/sshwsfc/django-xadmin/>`_ jntegration.
   * SMS factory to handle SMS like mails, Twilio integration implemented.
   * Async email class to send email via celery.
   
   
-
-Django-xadmin:
---------------
-
-1. Add ``mailfactory_extras`` to INSTALLED_APPS in your settings.py.
-2. A ``/mails/`` endpoint will be available at your admin pages, go to `http://localhost:8000/admin/mails/`.
-
-
 SMS Factory:
 ------------
 
