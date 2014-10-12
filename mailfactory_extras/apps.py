@@ -6,6 +6,6 @@ except ImportError:
     AppConfig = object
 
 class MailFactoryExtrasConfig(AppConfig):
-    name = 'django_mailfactory_extras'
-    verbose = 'Django MailFactory extras'
+    name = 'mailfactory_extras'
+    verbose = 'MailFactory extras'
 
